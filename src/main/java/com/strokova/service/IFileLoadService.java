@@ -1,8 +1,10 @@
 package com.strokova.service;
 
+import org.springframework.stereotype.Service;
+
 import java.io.File;
 
-
+@Service
 public interface IFileLoadService {
-    File downloadFile(String src);
+    byte[] downloadFileData(String src);
 }

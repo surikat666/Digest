@@ -5,9 +5,8 @@ import com.strokova.model.User;
 import com.strokova.service.IFileLoadService;
 import com.strokova.service.IHashService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class MainController {
@@ -19,16 +18,12 @@ public class MainController {
     @Autowired
     IFileLoadService fileLoadService;
 
-    @RequestMapping(value = "/home", method = RequestMethod.GET)
-    public Task home() {
-        Task myTask = new Task();
-        String src = "https://www.linkedin.com/robots.txt";
-        String algo = "md5";
-        myTask.setUserUUID(user.getUUID());
-        myTask.setSrc(src);
-        myTask.setAlgo(algo);
-        myTask.setHash(hashService.getHashSum(fileLoadService.downloadFileData(src), algo));
-        return myTask;
+    @PostMapping(value = "/home")
+    public ResponseEntity<Task> home(@RequestBody Task myTask) {
+           myTask.setUserUUID(user.getUUID());
+           myTask.setHash(hashService.getHashSum(fileLoadService.downloadFileData(myTask.getSrc()), myTask.getAlgo()));
+
+        return ResponseEntity.ok().body(myTask);
     }
 }
 
